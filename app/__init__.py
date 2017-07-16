@@ -5,6 +5,7 @@ from flask_bootstrap import Bootstrap
 from flask_babel import Babel, gettext
 from flask_mail import Mail, Message
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from flask_login import LoginManager, UserMixin
 from config import LANGUAGES,app_config
 
@@ -20,7 +21,8 @@ def create_app(config_name):
     app.config.from_object(app_config[config_name])
     app.config.from_pyfile('config.py')
     bootstrap.init_app(app)
-    #db.init_app(app)
+    db.init_app(app)
+    #migrate = Migrate(app, db)
     babel.init_app(app)
 
     @babel.localeselector
@@ -29,7 +31,7 @@ def create_app(config_name):
 
     mail.init_app(app)
     login_manager.init_app(app)
-
+    from app import models
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
